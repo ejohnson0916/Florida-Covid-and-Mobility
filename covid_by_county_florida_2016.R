@@ -34,8 +34,8 @@ norm_case_data %>%
     subtitle = "Cases/Population of County = Normalized",
     x = "Date",
     y = "Normalized Cases"
-  )
-# + facet_wrap(~party)
+  )+ 
+  facet_wrap(~party)
 
 # Deaths final clean up and graph -----------------------------------------
 
@@ -54,15 +54,8 @@ death_norm_data$party <- factor(
 death_norm_data %>%
   ggplot(aes(x = date, y = deaths_normalized, group = county, color = party)) +
   geom_line() +
-  geom_point()
-
-# ggplot; color by party
-
-
-lm()
-
-?lm
-
+  geom_point() +
+  facet_wrap(~party)
 
 # Notes -------------------------------------------------------------------
 
@@ -83,27 +76,85 @@ hills_case_data <-
   filter(!is.na(mobility))
 
 # How to fit a loess regression to a plot
-hills_case_data %>%
-  ggplot(aes(x = date, y = normalized_cases)) +
-  geom_line() +
-  geom_smooth(method = "loess", se = FALSE)
+# hills_case_data %>%
+#   ggplot(aes(x = date, y = normalized_cases)) +
+#   geom_line() +
+#   geom_smooth(method = "loess", se = FALSE)
 
 # The relationship between mobility and cases in Hillsborough
 library(patchwork)
 
+
+# Cases Graphs ------------------------------------------------------------
+
 p1 <- hills_case_data %>%
   ggplot(aes(x = normalized_cases, y = mobility)) +
   geom_point() +
-  geom_smooth(method = "loess")
+  geom_smooth(method = "loess") +
+  labs(
+    title = "Hillsborough county",
+    subtitle = "Cases and Mobility Loess Regression",
+    x = "Cases per 100,000",
+    y = "Mobility"
+  )
 
 p2 <- hills_case_data %>%
   ggplot(aes(x = normalized_cases, y = mobility)) +
   geom_point() +
   geom_smooth(method = "loess") +
-  coord_flip()
+  coord_flip()+
+  labs(
+    title = "Hillsborough county",
+    subtitle = "Cases and Mobility Loess Regression",
+    x = "Cases per 100,000",
+    y = "Mobility"
+  )
 
 p3 <- p1 + p2
 p3
+
+
+
+# Republican county cases example -----------------------------------------------
+
+repub_norm_data <- 
+  norm_case_data %>%
+  filter(party == "republican")
+
+santa_rosa_data <-
+  repub_norm_data %>%
+  filter(county == "Santa Rosa") %>%
+  filter(!is.na(mobility))
+
+r1 <- 
+  santa_rosa_data %>%
+  ggplot(aes(x = normalized_cases, y = mobility)) +
+  geom_point() +
+  geom_smooth(method = "loess") +
+  labs(
+    title = "Santa Rosa county",
+    subtitle = "Cases and Mobility Loess Regression",
+    x = "Cases per 100,000",
+    y = "Mobility"
+  )
+
+r2 <- 
+  santa_rosa_data %>%
+  ggplot(aes(x = normalized_cases, y = mobility)) +
+  geom_point() +
+  geom_smooth(method = "loess") +
+  coord_flip()+
+  labs(
+    title = "Santa Rosa county",
+    subtitle = "Cases and Mobility Loess Regression",
+    x = "Cases per 100,000, Flipped Axis",
+    y = "Mobility"
+  )
+
+r3 <- r1 + r2
+
+r3
+
 
 # styler:::style_active_file() for styling code
 

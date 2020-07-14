@@ -122,9 +122,10 @@ mobility_data_clean <-
 
 # Joining Election Data with COVID Data -----------------------------------
 
+str(election_data)
 election_data <-
   election_data %>%
-  rename(County = "Vote.by.county")
+  rename(County = "ï..Vote.by.county")
 
 main_data_cases <-
   cases %>%
@@ -169,3 +170,4 @@ death_norm_data <-
   mutate(population = as.integer((gsub(",", "", population)))) %>%
   mutate(deaths_normalized = death_count / population) %>%
   clean_names()
+
