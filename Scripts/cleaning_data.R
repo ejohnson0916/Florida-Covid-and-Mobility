@@ -9,15 +9,15 @@ library(lubridate)
 
 # Florida election results
 election_data <-
-  read.csv(here::here("florida_county_election_results_2016.csv"))
+  read.csv(here::here("data","florida_county_election_results_2016.csv"))
 
 pop_data_raw <-
-  read.csv(here::here("population_county_data.csv"))
+  read.csv(here::here("data","population_county_data.csv"))
 # %>%
 # rename(Rank = "ï..Rank")
 
 mobility_data_raw <-
-  read.csv(here::here("applemobilitytrends-2020-07-01.csv"))
+  read.csv(here::here("data","applemobilitytrends-2020-07-01.csv"))
 
 # WHO COVID Date
 covid_cases_url <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
