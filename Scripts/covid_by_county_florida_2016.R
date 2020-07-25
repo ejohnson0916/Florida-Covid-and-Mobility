@@ -1,6 +1,8 @@
 library(ggplot2)
+library(ggthemes)
+library(dplyr)
 
-source(here::here("cleaning_data.R"))
+source(here::here("Scripts","cleaning_data.R"))
 
 
 # Create scaled data ------------------------------------------------------
@@ -19,6 +21,12 @@ death_norm_data <-
          mobility_scaled = scale(mobility)) %>%
   clean_names()
 
+
+# cases_deaths_covid_party_mobilty <- 
+#   norm_case_data %>%
+#   left_join(death_norm_data) 
+# 
+# write.csv(cases_deaths_covid_party_mobilty, "Covid_mobility_party_and_more.csv")
 
 # Graphing Data -----------------------------------------------------------
 
@@ -53,7 +61,8 @@ norm_case_data %>%
     x = "Date",
     y = "Normalized Cases"
   )+ 
-  facet_wrap(~party)
+  facet_wrap(~party) +
+  theme_fivethirtyeight()
 
 # Deaths final clean up and graph -----------------------------------------
 
@@ -69,27 +78,64 @@ death_norm_data$party <- factor(
   levels = c("republican", "democrat")
 )
 
+# Graph scatter plot
 death_norm_data %>%
-  ggplot(aes(x = date, y = deaths_normalized, group = county, color = party, )) +
+  ggplot(aes(x = date, y = deaths_normalized, group = county, color = party)) +
   geom_line() +
-  geom_point(alpha = .05) +
-  facet_wrap(~party)
+  geom_point(alpha = .025) +
+  labs(
+    title = "Normalized Deaths over time",
+    subtitle = "Deaths/Population of County = Normalized",
+    x = "Date",
+    y = "Normalized Deaths"
+  )+ 
+  facet_wrap(~party) + 
+  theme_fivethirtyeight()
 
 
 
 # Graph Scaled Data -------------------------------------------------------
-norm_case_data %>%
-  filter(county == "Hillsborough") %>%
+norm_case_data %>% 
+  ggplot(aes(x = date, y = norm_scale_cases, group = county, color = party)) +
+  geom_point(alpha = .25) +
+  geom_line(alpha = 1) +
+  geom_point(aes(y = mobility_scaled, color = "Mobility"), alpha = .1)+
+  facet_wrap(~party)+
+  labs(
+    title = "Scaled/Normalized cases and scaled mobility over time",
+    subtitle = "By Party",
+    x = "Date",
+    y = "Scaled/Normalized Cases and Scaled Mobility"
+  ) +
+  theme_fivethirtyeight()
+
+norm_case_data %>% 
   ggplot(aes(x = date, y = norm_scale_cases, group = county, color = party)) +
   geom_point() +
   geom_line(alpha = 1) +
-  geom_point(aes(y = mobility_scaled, color = "Mobility"), alpha = .5)+
+  geom_point(aes(y = mobility_scaled, color = "Mobility"), alpha = .25)+
+  facet_wrap(~county)+
   labs(
-    title = "Scaled cases and mobility over time",
-    subtitle = "Hillsborough County",
+    title = "Normalized/Scaled cases and scaled mobility over time",
+    subtitle = "By County",
     x = "Date",
     y = "Scaled Cases and Mobility"
-  )
+  ) 
+
+death_norm_data %>%
+  ggplot(aes(x = date, y = norm_scale_deaths, group = county, color = party)) +
+  geom_point(alpha = .5) +
+  geom_line(alpha = .75) +
+  geom_point(aes(y = mobility_scaled, color = "Mobility"), alpha = .2)+
+  facet_wrap(~party)+
+  labs(
+    title = "Normalized and Scaled deaths and scaled mobility over time",
+    subtitle = "By County",
+    x = "Date",
+    y = "Scaled and Normalized Deaths and Mobility"
+  ) +
+  theme_fivethirtyeight()
+
 
 
 

@@ -14,10 +14,10 @@ election_data <-
 pop_data_raw <-
   read.csv(here::here("data","population_county_data.csv"))
 # %>%
-# rename(Rank = "ï..Rank")
+#   rename(Rank = "ï..Rank")
 
 mobility_data_raw <-
-  read.csv(here::here("data","applemobilitytrends-2020-07-15.csv"))
+  read.csv(here::here("data","applemobilitytrends-2020-07-22.csv"))
 
 # WHO COVID Date
 covid_cases_url <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
@@ -125,7 +125,8 @@ mobility_data_clean <-
 str(election_data)
 election_data <-
   election_data %>%
-  rename(County = "ï..Vote.by.county")
+  clean_names() %>%
+  rename(County = "i_vote_by_county")
 
 main_data_cases <-
   cases %>%
@@ -171,3 +172,6 @@ death_norm_data <-
   mutate(deaths_normalized = death_count / population) %>%
   clean_names()
 
+cases_deaths_covid_party_mobilty <-
+  norm_case_data %>%
+  left_join(death_norm_data)
